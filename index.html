@@ -56,14 +56,14 @@
 
                 if (segundosRestantes === 0) {
                     atualizarImagem(); // Atualiza a imagem quando o contador chegar a zero
-                    contadorElemento.textContent = 15; // Reinicia o contador
+                    contadorElemento.textContent = 10; // Reinicia o contador
                 } else {
                     contadorElemento.textContent = segundosRestantes;
                 }
             }
 
             setInterval(atualizarContador, 1000); // Atualiza o contador a cada segundo
-            setInterval(atualizarImagem, 15000); // Muda a imagem a cada 15 segundos
+            setInterval(atualizarImagem, 10000); // Muda a imagem a cada 15 segundos
         }
 
         mudarImagem();
@@ -71,7 +71,7 @@
         // Atualização do navegador a cada 1 minuto
         setInterval(function() {
             location.reload();
-        }, 60000); // 60000 ms = 1 minuto
+        }, 300000); // 300000 ms = 5 minuto
     </script>
 </body>
 </html>
