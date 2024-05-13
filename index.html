@@ -30,9 +30,9 @@
 </head>
 <body>
     <div class="gallery">
-        <img id="imagem" src="logo.jpg" alt="Logo">
+        <img id="imagem" src="" alt="Imagem">
     </div>
-    <p class="contador" id="tempo-restante">15</p>
+    <p class="contador" id="tempo-restante"></p>
 
     <script>
         function mudarImagem() {
@@ -47,34 +47,34 @@
             let index = 0;
             const imagemElemento = document.getElementById('imagem');
             const contadorElemento = document.getElementById('tempo-restante');
+            const tempoTotal = imagens.length * 15; // Tempo total em segundos
+            let segundosRestantes = tempoTotal;
 
             function atualizarImagem() {
-                index = (index + 1) % imagens.length; // Incrementa o índice para a próxima imagem
-                imagemElemento.src = imagens[index]; // Define a próxima imagem
+                imagemElemento.src = imagens[index];
+                index = (index + 1) % imagens.length;
             }
 
             function atualizarContador() {
-                let segundosRestantes = parseInt(contadorElemento.textContent);
+                contadorElemento.textContent = segundosRestantes;
                 segundosRestantes--;
 
-                if (segundosRestantes === 0) {
-                    atualizarImagem(); // Atualiza a imagem quando o contador chegar a zero
-                    contadorElemento.textContent = 10; // Reinicia o contador
-                } else {
-                    contadorElemento.textContent = segundosRestantes;
+                if (segundosRestantes < 0) {
+                    segundosRestantes = tempoTotal;
+                    atualizarImagem();
                 }
             }
 
-            setInterval(atualizarContador, 1000); // Atualiza o contador a cada segundo
-            setInterval(atualizarImagem, 10000); // Muda a imagem a cada 15 segundos
+            setInterval(atualizarContador, 1000);
+            atualizarImagem();
         }
 
         mudarImagem();
 
-        // Atualização do navegador a cada 1 minuto
+        // Atualização do navegador a cada 2 minutos
         setInterval(function() {
             location.reload();
-        }, 60000); // 300000 ms = 5 minuto
+        }, 120000); // 120000 ms = 2 minutos
     </script>
 </body>
 </html>
