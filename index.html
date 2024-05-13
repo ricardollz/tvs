@@ -30,9 +30,9 @@
 </head>
 <body>
     <div class="gallery">
-        <img id="imagem" src="logo.jpg" alt="Logo">
+        <img id="imagem" src="" alt="Imagem">
     </div>
-    <p class="contador" id="tempo-restante">15</p>
+    <p class="contador" id="tempo-restante"></p>
 
     <script>
         function mudarImagem() {
@@ -47,3 +47,37 @@
             let index = 0;
             const imagemElemento = document.getElementById('imagem');
             const contadorElemento = document.getElementById('tempo-restante');
+
+            function atualizarImagem() {
+                imagemElemento.src = imagens[index];
+                index = (index + 1) % imagens.length;
+            }
+
+            function atualizarContador(segundosRestantes) {
+                contadorElemento.textContent = segundosRestantes;
+            }
+
+            let segundosRestantes = 15;
+
+            function atualizar() {
+                atualizarContador(segundosRestantes);
+                segundosRestantes--;
+                if (segundosRestantes < 0) {
+                    segundosRestantes = 15;
+                    atualizarImagem();
+                }
+            }
+
+            setInterval(atualizar, 1000);
+            atualizarImagem();
+        }
+
+        mudarImagem();
+
+        // Atualização do navegador a cada 2 minutos
+        setInterval(function() {
+            location.reload();
+        }, 120000); // 120000 ms = 2 minutos
+    </script>
+</body>
+</html>
