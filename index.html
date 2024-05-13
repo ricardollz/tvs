@@ -30,9 +30,9 @@
 </head>
 <body>
     <div class="gallery">
-        <img id="imagem" src="" alt="Imagem">
+        <img id="imagem" src="logo.jpg" alt="Logo">
     </div>
-    <p class="contador" id="tempo-restante"></p>
+    <p class="contador" id="tempo-restante">15</p>
 
     <script>
         function mudarImagem() {
@@ -47,19 +47,3 @@
             let index = 0;
             const imagemElemento = document.getElementById('imagem');
             const contadorElemento = document.getElementById('tempo-restante');
-            const tempoTotal = imagens.length * 15; // Tempo total em segundos
-            const intervalo = tempoTotal / imagens.length; // Intervalo entre imagens
-
-            function atualizarImagem() {
-                imagemElemento.src = imagens[index];
-                index = (index + 1) % imagens.length;
-            }
-
-            function atualizarContador(segundosRestantes) {
-                contadorElemento.textContent = segundosRestantes;
-            }
-
-            let segundosRestantes = intervalo;
-
-            setInterval(function() {
-                atualizarContador(segundosRes
