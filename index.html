@@ -48,33 +48,18 @@
             const imagemElemento = document.getElementById('imagem');
             const contadorElemento = document.getElementById('tempo-restante');
             const tempoTotal = imagens.length * 15; // Tempo total em segundos
-            let segundosRestantes = tempoTotal;
+            const intervalo = tempoTotal / imagens.length; // Intervalo entre imagens
 
             function atualizarImagem() {
                 imagemElemento.src = imagens[index];
                 index = (index + 1) % imagens.length;
             }
 
-            function atualizarContador() {
+            function atualizarContador(segundosRestantes) {
                 contadorElemento.textContent = segundosRestantes;
-                segundosRestantes--;
-
-                if (segundosRestantes < 0) {
-                    segundosRestantes = tempoTotal;
-                    atualizarImagem();
-                }
             }
 
-            setInterval(atualizarContador, 1000);
-            atualizarImagem();
-        }
+            let segundosRestantes = intervalo;
 
-        mudarImagem();
-
-        // Atualização do navegador a cada 2 minutos
-        setInterval(function() {
-            location.reload();
-        }, 120000); // 120000 ms = 2 minutos
-    </script>
-</body>
-</html>
+            setInterval(function() {
+                atualizarContador(segundosRes
