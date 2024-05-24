@@ -38,4 +38,55 @@
         function mudarImagem() {
             const imagens = [
                 { src: "logo.jpg", duracao: 15 },
-                { src: "comunic
+                { src: "comunicado.jpg", duracao: 15 },
+                { src: "bomdia1.jpg", duracao: 15 },
+                { src: "pilula.jpg", duracao: 25 },
+                { src: "campanhasolidaria.jpg", duracao: 15 },
+                { src: "horahora.jpg", duracao: 15 },
+                { src: "horahora.jpg", duracao: 15 },
+                { src: "ponteiro.jpg", duracao: 15 }
+            ];
+            const imagemElemento = document.getElementById('imagem');
+            const contadorElemento = document.getElementById('tempo-restante');
+
+            function obterTempoRestante() {
+                const agora = new Date();
+                const totalSegundos = Math.floor(agora.getTime() / 1000);
+                let tempoAcumulado = 0;
+                let indexAtual = 0;
+
+                for (let i = 0; i < imagens.length; i++) {
+                    tempoAcumulado += imagens[i].duracao;
+                    if (totalSegundos % tempoAcumulado < imagens[i].duracao) {
+                        indexAtual = i;
+                        break;
+                    }
+                }
+
+                const tempoRestante = tempoAcumulado - (totalSegundos % tempoAcumulado);
+                return { index: indexAtual, tempoRestante: tempoRestante };
+            }
+
+            function atualizarImagem() {
+                const { index, tempoRestante } = obterTempoRestante();
+                imagemElemento.src = imagens[index].src;
+                atualizarContador(tempoRestante);
+            }
+
+            function atualizarContador(segundosRestantes) {
+                contadorElemento.textContent = segundosRestantes;
+            }
+
+            setInterval(atualizarImagem, 1000);
+            atualizarImagem();
+        }
+
+        mudarImagem();
+
+        // Atualização do navegador a cada 2 minutos
+        setInterval(function() {
+            location.reload();
+        }, 120000); // 120000 ms = 2 minutos
+    </script>
+</body>
+</html>
