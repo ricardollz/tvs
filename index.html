@@ -37,47 +37,40 @@
     <script>
         function mudarImagem() {
             const imagens = [
-                { src: "logo.jpg", duracao: 15 },
-                { src: "comunicado.jpg", duracao: 15 },
-                { src: "bomdia1.jpg", duracao: 15 },
-                { src: "pilula.jpg", duracao: 25 },
-                { src: "campanhasolidaria.jpg", duracao: 15 },
-                { src: "horahora.jpg", duracao: 15 },
-                { src: "horahora.jpg", duracao: 15 },
-                { src: "ponteiro.jpg", duracao: 15 }
+                "logo.jpg",
+                "comunicado.jpg",
+                "bomdia1.jpg",
+                "pilula.jpg",
+                "campanhasolidaria.jpg",
+                "horahora.jpg",
+                "horahora.jpg",
+                "ponteiro.jpg"
             ];
+            let index = 0;
             const imagemElemento = document.getElementById('imagem');
             const contadorElemento = document.getElementById('tempo-restante');
 
-            // Calcula o tempo total do ciclo completo
-            const totalDuracao = imagens.reduce((acc, img) => acc + img.duracao, 0);
-
             function atualizarImagem() {
-                const agora = new Date();
-                const totalSegundos = Math.floor(agora.getTime() / 1000);
-                const segundosNoCiclo = totalSegundos % totalDuracao;
-                
-                let tempoAcumulado = 0;
-                let indexAtual = 0;
-
-                for (let i = 0; i < imagens.length; i++) {
-                    tempoAcumulado += imagens[i].duracao;
-                    if (segundosNoCiclo < tempoAcumulado) {
-                        indexAtual = i;
-                        break;
-                    }
-                }
-
-                imagemElemento.src = imagens[indexAtual].src;
-                const segundosRestantes = tempoAcumulado - segundosNoCiclo;
-                atualizarContador(segundosRestantes);
+                imagemElemento.src = imagens[index];
+                index = (index + 1) % imagens.length;
             }
 
             function atualizarContador(segundosRestantes) {
                 contadorElemento.textContent = segundosRestantes;
             }
 
-            setInterval(atualizarImagem, 1000);
+            let segundosRestantes = 15;
+
+            function atualizar() {
+                atualizarContador(segundosRestantes);
+                segundosRestantes--;
+                if (segundosRestantes < 0) {
+                    segundosRestantes = 15;
+                    atualizarImagem();
+                }
+            }
+
+            setInterval(atualizar, 1000);
             atualizarImagem();
         }
 
