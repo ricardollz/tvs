@@ -49,28 +49,28 @@
             const imagemElemento = document.getElementById('imagem');
             const contadorElemento = document.getElementById('tempo-restante');
 
-            function obterTempoRestante() {
+            // Calcula o tempo total do ciclo completo
+            const totalDuracao = imagens.reduce((acc, img) => acc + img.duracao, 0);
+
+            function atualizarImagem() {
                 const agora = new Date();
                 const totalSegundos = Math.floor(agora.getTime() / 1000);
+                const segundosNoCiclo = totalSegundos % totalDuracao;
+                
                 let tempoAcumulado = 0;
                 let indexAtual = 0;
 
                 for (let i = 0; i < imagens.length; i++) {
                     tempoAcumulado += imagens[i].duracao;
-                    if (totalSegundos % tempoAcumulado < imagens[i].duracao) {
+                    if (segundosNoCiclo < tempoAcumulado) {
                         indexAtual = i;
                         break;
                     }
                 }
 
-                const tempoRestante = tempoAcumulado - (totalSegundos % tempoAcumulado);
-                return { index: indexAtual, tempoRestante: tempoRestante };
-            }
-
-            function atualizarImagem() {
-                const { index, tempoRestante } = obterTempoRestante();
-                imagemElemento.src = imagens[index].src;
-                atualizarContador(tempoRestante);
+                imagemElemento.src = imagens[indexAtual].src;
+                const segundosRestantes = tempoAcumulado - segundosNoCiclo;
+                atualizarContador(segundosRestantes);
             }
 
             function atualizarContador(segundosRestantes) {
