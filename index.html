@@ -47,35 +47,26 @@
                 "horahora2.jpg",
                 "ponteiro.jpg"
             ];
-
+            let index = 0;
             const imagemElemento = document.getElementById('imagem');
             const contadorElemento = document.getElementById('tempo-restante');
 
-            function obterSegundosRestantes() {
-                const agora = new Date();
-                const utc = agora.getTime() + (agora.getTimezoneOffset() * 60000);
-                const offset = -3; // Horário de Brasília (UTC-3)
-                const brasilia = new Date(utc + (3600000 * offset));
-                return 15 - (brasilia.getSeconds() % 15);
-            }
-
             function atualizarImagem() {
-                const agora = new Date();
-                const utc = agora.getTime() + (agora.getTimezoneOffset() * 60000);
-                const offset = -3; // Horário de Brasília (UTC-3)
-                const brasilia = new Date(utc + (3600000 * offset));
-                const index = Math.floor(brasilia.getSeconds() / 15) % imagens.length;
                 imagemElemento.src = imagens[index];
+                index = (index + 1) % imagens.length;
             }
 
             function atualizarContador(segundosRestantes) {
                 contadorElemento.textContent = segundosRestantes;
             }
 
+            let segundosRestantes = 15;
+
             function atualizar() {
-                const segundosRestantes = obterSegundosRestantes();
                 atualizarContador(segundosRestantes);
-                if (segundosRestantes === 15) {
+                segundosRestantes--;
+                if (segundosRestantes < 0) {
+                    segundosRestantes = 15;
                     atualizarImagem();
                 }
             }
