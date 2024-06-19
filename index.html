@@ -52,26 +52,35 @@
                 "recebimento.jpg",
                 "campanhacopo.jpg"
             ];
-            let index = 0;
+
             const imagemElemento = document.getElementById('imagem');
             const contadorElemento = document.getElementById('tempo-restante');
 
+            function obterHoraBrasilia() {
+                const agora = new Date();
+                const utc = agora.getTime() + (agora.getTimezoneOffset() * 6000);
+                const offsetBrasilia = -3; // Horário de Brasília (UTC-3)
+                const horaBrasilia = new Date(utc + (3600000 * offsetBrasilia));
+                return horaBrasilia;
+            }
+
             function atualizarImagem() {
+                const horaBrasilia = obterHoraBrasilia();
+                const segundos = horaBrasilia.getSeconds();
+                const index = Math.floor((horaBrasilia.getMinutes() * 60 + segundos) / 15) % imagens.length;
                 imagemElemento.src = imagens[index];
-                index = (index + 1) % imagens.length;
             }
 
             function atualizarContador(segundosRestantes) {
                 contadorElemento.textContent = segundosRestantes;
             }
 
-            let segundosRestantes = 15;
-
             function atualizar() {
+                const horaBrasilia = obterHoraBrasilia();
+                const segundos = horaBrasilia.getSeconds();
+                const segundosRestantes = 15 - (segundos % 15);
                 atualizarContador(segundosRestantes);
-                segundosRestantes--;
-                if (segundosRestantes < 0) {
-                    segundosRestantes = 15;
+                if (segundosRestantes === 15) {
                     atualizarImagem();
                 }
             }
