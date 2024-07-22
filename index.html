@@ -65,26 +65,26 @@
                 contadorElemento.textContent = segundosRestantes;
             }
 
+            function atualizarImagemPeriodicamente() {
+                atualizarImagem();
+                setTimeout(atualizarImagemPeriodicamente, 15000); // 15 segundos
+            }
+
             function atualizar() {
                 const horaBrasilia = obterHoraBrasilia();
                 const segundos = horaBrasilia.getSeconds();
-                const segundosRestantes = 60 - (segundos % 60); // Ajustado para 60 segundos
+                const segundosRestantes = 120 - (segundos % 120); // 2 minutos
                 atualizarContador(segundosRestantes);
-                if (segundosRestantes === 60) { // Verifica se é um minuto completo
-                    atualizarImagem();
+                if (segundosRestantes === 120) { // Verifica se é um ciclo completo de 2 minutos
+                    location.reload();
                 }
             }
 
-            setInterval(atualizar, 1000); // Intervalo de 1 segundo para atualizar o contador
-            atualizarImagem(); // Atualiza a imagem inicialmente
+            setInterval(atualizar, 1000); // Atualiza o contador a cada segundo
+            atualizarImagemPeriodicamente(); // Inicia a troca de imagens a cada 15 segundos
         }
 
         mudarImagem();
-
-        // Atualização do navegador a cada 1 minuto (60000 ms)
-        setInterval(function() {
-            location.reload();
-        }, 60000);
     </script>
 </body>
 </html>
