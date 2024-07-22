@@ -37,10 +37,10 @@
     <script>
         function mudarImagem() {
             const imagens = [
-                "horahora.jpg",
-                "recebimento.jpg",
-                "ponteiro.jpg",
-                "pilula.jpg"
+            "horahora.jpg",
+            "recebimento.jpg",
+            "ponteiro.jpg",
+            "pilula.jpg"
             ];
 
             const imagemElemento = document.getElementById('imagem');
@@ -48,7 +48,7 @@
 
             function obterHoraBrasilia() {
                 const agora = new Date();
-                const utc = agora.getTime() + (agora.getTimezoneOffset() * 60000); // Corrigido de 6000 para 60000
+                const utc = agora.getTime() + (agora.getTimezoneOffset() * 6000);
                 const offsetBrasilia = -3; // Horário de Brasília (UTC-3)
                 const horaBrasilia = new Date(utc + (3600000 * offsetBrasilia));
                 return horaBrasilia;
@@ -65,26 +65,26 @@
                 contadorElemento.textContent = segundosRestantes;
             }
 
-            function atualizarImagemPeriodicamente() {
-                atualizarImagem();
-                setTimeout(atualizarImagemPeriodicamente, 15000); // 15 segundos
-            }
-
             function atualizar() {
                 const horaBrasilia = obterHoraBrasilia();
                 const segundos = horaBrasilia.getSeconds();
-                const segundosRestantes = 120 - (segundos % 120); // 2 minutos
+                const segundosRestantes = 15 - (segundos % 15);
                 atualizarContador(segundosRestantes);
-                if (segundosRestantes === 120) { // Verifica se é um ciclo completo de 2 minutos
-                    location.reload();
+                if (segundosRestantes === 15) {
+                    atualizarImagem();
                 }
             }
 
-            setInterval(atualizar, 1000); // Atualiza o contador a cada segundo
-            atualizarImagemPeriodicamente(); // Inicia a troca de imagens a cada 15 segundos
+            setInterval(atualizar, 1000);
+            atualizarImagem();
         }
 
         mudarImagem();
+
+        // Atualização do navegador a cada 5 minutos (300 segundos)
+        setInterval(function() {
+            location.reload();
+        }, 300000); // 300000 ms = 5 minutos
     </script>
 </body>
 </html>
