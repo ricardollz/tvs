@@ -18,7 +18,7 @@
             text-align: center;
         }
         .contador {
-            font-size: 10px;
+            font-size: 20px; /* Ajustei o tamanho da fonte para ser mais visível */
             font-family: "calibri light", sans-serif;
             font-style: italic;
             position: absolute;
@@ -37,29 +37,28 @@
     <script>
         function mudarImagem() {
             const imagens = [
-            "horahora.jpg",
-            "recebimento.jpg",
-            "ponteiro.jpg",
-            "pilula.jpg",
-            "sigga.jpg"
+                "horahora.jpg",
+                "recebimento.jpg",
+                "ponteiro.jpg",
+                "pilula.jpg",
+                "sigga.jpg"
             ];
 
             const imagemElemento = document.getElementById('imagem');
             const contadorElemento = document.getElementById('tempo-restante');
+            let imagemIndex = 0; // Índice da imagem atual
 
             function obterHoraBrasilia() {
                 const agora = new Date();
-                const utc = agora.getTime() + (agora.getTimezoneOffset() * 6000);
+                const utc = agora.getTime() + (agora.getTimezoneOffset() * 60000);
                 const offsetBrasilia = -3; // Horário de Brasília (UTC-3)
                 const horaBrasilia = new Date(utc + (3600000 * offsetBrasilia));
                 return horaBrasilia;
             }
 
             function atualizarImagem() {
-                const horaBrasilia = obterHoraBrasilia();
-                const segundos = horaBrasilia.getSeconds();
-                const index = Math.floor((horaBrasilia.getMinutes() * 60 + segundos) / 15) % imagens.length;
-                imagemElemento.src = imagens[index];
+                imagemElemento.src = imagens[imagemIndex];
+                imagemIndex = (imagemIndex + 1) % imagens.length; // Atualiza o índice da imagem
             }
 
             function atualizarContador(segundosRestantes) {
@@ -70,22 +69,25 @@
                 const horaBrasilia = obterHoraBrasilia();
                 const segundos = horaBrasilia.getSeconds();
                 const segundosRestantes = 15 - (segundos % 15);
+
                 atualizarContador(segundosRestantes);
+
                 if (segundosRestantes === 15) {
                     atualizarImagem();
                 }
             }
 
+            // Atualiza a imagem a cada 15 segundos
+            setInterval(atualizarImagem, 15000);
+
+            // Atualiza o contador a cada segundo
             setInterval(atualizar, 1000);
+
+            // Inicializa a primeira imagem
             atualizarImagem();
         }
 
         mudarImagem();
-
-        // Atualização do navegador a cada 5 minutos (300 segundos)
-        setInterval(function() {
-            location.reload();
-        }, 300000); // 300000 ms = 5 minutos
     </script>
 </body>
 </html>
