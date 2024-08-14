@@ -35,59 +35,59 @@
     <p class="contador" id="tempo-restante"></p>
 
     <script>
-        function mudarImagem() {
-            const imagens = [
-                "horahora.jpg",
-                "recebimento.jpg",
-                "ponteiro.jpg",
-                "pilula.jpg",
-                "sigga.jpg"
-            ];
+        const imagemElemento = document.getElementById('imagem');
+        const contadorElemento = document.getElementById('tempo-restante');
 
-            const imagemElemento = document.getElementById('imagem');
-            const contadorElemento = document.getElementById('tempo-restante');
-            let imagemIndex = 0; // Índice da imagem atual
+        const imagens = [
+            "horahora.jpg",
+            "recebimento.jpg",
+            "ponteiro.jpg",
+            "pilula.jpg",
+            "sigga.jpg"
+        ];
 
-            function obterHoraBrasilia() {
-                const agora = new Date();
-                const utc = agora.getTime() + (agora.getTimezoneOffset() * 60000);
-                const offsetBrasilia = -3; // Horário de Brasília (UTC-3)
-                const horaBrasilia = new Date(utc + (3600000 * offsetBrasilia));
-                return horaBrasilia;
-            }
+        let imagemIndex = 0;
 
-            function atualizarImagem() {
-                imagemElemento.src = imagens[imagemIndex];
-                imagemIndex = (imagemIndex + 1) % imagens.length; // Atualiza o índice da imagem
-            }
-
-            function atualizarContador(segundosRestantes) {
-                contadorElemento.textContent = segundosRestantes;
-            }
-
-            function atualizar() {
-                const horaBrasilia = obterHoraBrasilia();
-                const segundos = horaBrasilia.getSeconds();
-                const segundosRestantes = 15 - (segundos % 15);
-
-                atualizarContador(segundosRestantes);
-
-                if (segundosRestantes === 15) {
-                    atualizarImagem();
-                }
-            }
-
-            // Atualiza a imagem a cada 15 segundos
-            setInterval(atualizarImagem, 15000);
-
-            // Atualiza o contador a cada segundo
-            setInterval(atualizar, 1000);
-
-            // Inicializa a primeira imagem
-            atualizarImagem();
+        function obterTempoServidor() {
+            return fetch('https://worldtimeapi.org/api/ip') // API para obter o tempo do servidor
+                .then(response => response.json())
+                .then(data => new Date(data.datetime));
         }
 
-        mudarImagem();
+        function atualizarImagem() {
+            imagemElemento.src = imagens[imagemIndex];
+            imagemIndex = (imagemIndex + 1) % imagens.length;
+        }
+
+        function atualizarContador(segundosRestantes) {
+            contadorElemento.textContent = segundosRestantes;
+        }
+
+        async function sincronizar() {
+            const horaServidor = await obterTempoServidor();
+            const segundos = horaServidor.getSeconds();
+            const segundosRestantes = 15 - (segundos % 15);
+
+            atualizarContador(segundosRestantes);
+
+            if (segundosRestantes === 15) {
+                atualizarImagem();
+            }
+        }
+
+        // Sincroniza a imagem a cada 15 segundos
+        setInterval(sincronizar, 15000);
+
+        // Atualiza o contador a cada segundo
+        setInterval(async () => {
+            const horaServidor = await obterTempoServidor();
+            const segundos = horaServidor.getSeconds();
+            const segundosRestantes = 15 - (segundos % 15);
+            atualizarContador(segundosRestantes);
+        }, 1000);
+
+        // Inicializa a primeira imagem
+        sincronizar();
     </script>
 </body>
 </html>
