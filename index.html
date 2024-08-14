@@ -48,10 +48,21 @@
 
         let imagemIndex = 0;
 
-        function obterTempoServidor() {
-            return fetch('https://worldtimeapi.org/api/ip') // API para obter o tempo do servidor
-                .then(response => response.json())
-                .then(data => new Date(data.datetime));
+        // Função para obter o tempo atual em UTC e converter para o horário de Brasília
+        async function obterHoraBrasilia() {
+            try {
+                const response = await fetch('https://worldtimeapi.org/api/timezone/Etc/UTC'); // API para obter o tempo UTC
+                const data = await response.json();
+                const utcHora = new Date(data.datetime);
+                
+                // Convertendo UTC para horário de Brasília (UTC-3)
+                const offsetBrasilia = -3; // Horário de Brasília é UTC-3
+                const horaBrasilia = new Date(utcHora.getTime() + (offsetBrasilia * 3600000));
+                return horaBrasilia;
+            } catch (error) {
+                console.error('Erro ao obter o tempo do servidor:', error);
+                return new Date(); // Retorna a data atual local como fallback
+            }
         }
 
         function atualizarImagem() {
@@ -64,8 +75,8 @@
         }
 
         async function sincronizar() {
-            const horaServidor = await obterTempoServidor();
-            const segundos = horaServidor.getSeconds();
+            const horaBrasilia = await obterHoraBrasilia();
+            const segundos = horaBrasilia.getSeconds();
             const segundosRestantes = 15 - (segundos % 15);
 
             atualizarContador(segundosRestantes);
@@ -75,18 +86,10 @@
             }
         }
 
-        // Sincroniza a imagem a cada 15 segundos
-        setInterval(sincronizar, 15000);
+        // Atualiza a imagem e o contador a cada segundo
+        setInterval(sincronizar, 1000);
 
-        // Atualiza o contador a cada segundo
-        setInterval(async () => {
-            const horaServidor = await obterTempoServidor();
-            const segundos = horaServidor.getSeconds();
-            const segundosRestantes = 15 - (segundos % 15);
-            atualizarContador(segundosRestantes);
-        }, 1000);
-
-        // Inicializa a primeira imagem
+        // Inicializa a sincronização
         sincronizar();
     </script>
 </body>
