@@ -48,21 +48,12 @@
 
         let imagemIndex = 0;
 
-        // Função para obter o tempo atual em UTC e converter para o horário de Brasília
-        async function obterHoraBrasilia() {
-            try {
-                const response = await fetch('https://worldtimeapi.org/api/timezone/Etc/UTC'); // API para obter o tempo UTC
-                const data = await response.json();
-                const utcHora = new Date(data.datetime);
-                
-                // Convertendo UTC para horário de Brasília (UTC-3)
-                const offsetBrasilia = -3; // Horário de Brasília é UTC-3
-                const horaBrasilia = new Date(utcHora.getTime() + (offsetBrasilia * 3600000));
-                return horaBrasilia;
-            } catch (error) {
-                console.error('Erro ao obter o tempo do servidor:', error);
-                return new Date(); // Retorna a data atual local como fallback
-            }
+        // Função para obter o horário de Brasília local
+        function obterHoraBrasiliaLocal() {
+            const agora = new Date();
+            const offsetBrasilia = -3; // Horário de Brasília é UTC-3
+            const horaBrasilia = new Date(agora.getTime() + (offsetBrasilia * 3600000) - agora.getTimezoneOffset() * 60000);
+            return horaBrasilia;
         }
 
         function atualizarImagem() {
@@ -74,8 +65,8 @@
             contadorElemento.textContent = segundosRestantes;
         }
 
-        async function sincronizar() {
-            const horaBrasilia = await obterHoraBrasilia();
+        function sincronizar() {
+            const horaBrasilia = obterHoraBrasiliaLocal();
             const segundos = horaBrasilia.getSeconds();
             const segundosRestantes = 15 - (segundos % 15);
 
@@ -86,11 +77,9 @@
             }
         }
 
-        // Atualiza a imagem e o contador a cada segundo
-        setInterval(sincronizar, 1000);
-
         // Inicializa a sincronização
         sincronizar();
+        setInterval(sincronizar, 1000); // Atualiza o contador e imagem a cada segundo
     </script>
 </body>
 </html>
