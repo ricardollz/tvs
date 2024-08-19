@@ -50,10 +50,15 @@
 
         // Função para obter o horário de Brasília local
         function obterHoraBrasiliaLocal() {
+            const options = { timeZone: 'America/Sao_Paulo', hour12: false };
             const agora = new Date();
-            const offsetBrasilia = -3; // Horário de Brasília é UTC-3
-            const horaBrasilia = new Date(agora.getTime() + (offsetBrasilia * 3600000) - agora.getTimezoneOffset() * 60000);
-            return horaBrasilia;
+            const horaBrasilia = new Intl.DateTimeFormat('pt-BR', options).formatToParts(agora);
+
+            const horas = parseInt(horaBrasilia.find(part => part.type === 'hour').value, 10);
+            const minutos = parseInt(horaBrasilia.find(part => part.type === 'minute').value, 10);
+            const segundos = parseInt(horaBrasilia.find(part => part.type === 'second').value, 10);
+
+            return { horas, minutos, segundos };
         }
 
         function atualizarImagem() {
@@ -66,8 +71,7 @@
         }
 
         function sincronizar() {
-            const horaBrasilia = obterHoraBrasiliaLocal();
-            const segundos = horaBrasilia.getSeconds();
+            const { segundos } = obterHoraBrasiliaLocal();
             const segundosRestantes = 15 - (segundos % 15);
 
             atualizarContador(segundosRestantes);
