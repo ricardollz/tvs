@@ -84,6 +84,11 @@
         // Inicializa a sincronização
         sincronizar();
         setInterval(sincronizar, 1000); // Atualiza o contador e imagem a cada segundo
+
+        // Recarrega a página a cada 5 minutos
+        setTimeout(() => {
+            location.reload();
+        }, 300000); // 300.000 milissegundos = 5 minutos
     </script>
 </body>
 </html>
