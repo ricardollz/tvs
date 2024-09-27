@@ -40,12 +40,12 @@
 
         const imagens = [
             "horahora.jpg",
+            "recebimento.jpg",
+            "ponteiro.jpg",
             "pilula.jpg",
             "sigga.jpg",
             "nps.jpg",
-            "campanha.jpg",
-            "recebimento.jpg",
-            "ponteiro.jpg"
+            "campanha.jpg"
         ];
 
         function obterTimestampBrasilia() {
@@ -58,7 +58,7 @@
         function atualizarImagem() {
             const timestamp = obterTimestampBrasilia();
             const segundos = Math.floor((timestamp / 1000) % 60);
-            const indiceImagem = Math.floor(segundos / 15) % imagens.length;
+            const indiceImagem = Math.floor(segundos / (15 / imagens.length)) % imagens.length;
             imagemElemento.src = imagens[indiceImagem];
         }
 
@@ -74,9 +74,11 @@
             atualizarContador();
         }
 
+        // Inicializa a sincronização
         sincronizar();
-        setInterval(sincronizar, 1000);
+        setInterval(sincronizar, 1000); // Atualiza a cada segundo
 
+        // Recarrega a página a cada 5 minutos (300000 milissegundos)
         setTimeout(() => {
             location.reload();
         }, 300000);
