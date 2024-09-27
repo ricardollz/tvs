@@ -30,7 +30,7 @@
 </head>
 <body>
     <div class="gallery">
-        <img id="imagem" src="" alt="Imagem" style="max-width: 100%; height: auto;">
+        <img id="imagem" src="" alt="Imagem">
     </div>
     <p class="contador" id="tempo-restante"></p>
 
@@ -48,9 +48,10 @@
             "campanha.jpg"
         ];
 
+        // Função para obter o timestamp do horário de Brasília em milissegundos
         function obterTimestampBrasilia() {
             const agora = new Date();
-            const offsetBrasilia = -3 * 60;
+            const offsetBrasilia = -3 * 60; // UTC-3 em minutos
             const timezoneOffset = agora.getTimezoneOffset();
             return agora.getTime() + ((offsetBrasilia - timezoneOffset) * 60 * 1000);
         }
@@ -66,7 +67,7 @@
             const timestamp = obterTimestampBrasilia();
             const segundos = Math.floor((timestamp / 1000) % 60);
             const segundosRestantes = 15 - (segundos % 15);
-            contadorElemento.textContent = `${segundosRestantes}`;
+            contadorElemento.textContent = ${segundosRestantes};
         }
 
         function sincronizar() {
@@ -74,9 +75,11 @@
             atualizarContador();
         }
 
+        // Inicializa a sincronização
         sincronizar();
-        setInterval(sincronizar, 1000);
+        setInterval(sincronizar, 1000); // Atualiza a sincronização a cada segundo
 
+        // Recarrega a página a cada 5 minutos (300000 milissegundos)
         setTimeout(() => {
             location.reload();
         }, 300000);
