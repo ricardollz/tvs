@@ -67,8 +67,12 @@
                     segundosRestantes = 15; // Reinicia o contador
                 }
 
-                atualizarImagem(); // Atualiza a imagem se necessário
                 contadorElemento.textContent = segundosRestantes; // Atualiza o contador
+
+                // Atualiza a imagem somente a cada 15 segundos
+                if (segundosRestantes === 15) {
+                    atualizarImagem(); 
+                }
 
             }, 1000); // Atualiza a cada segundo
 
