@@ -16,23 +16,21 @@
             overflow: hidden; /* Evita barras de rolagem */
         }
         .gallery {
-            position: relative;
             width: 80vw; /* Ajusta a largura da galeria */
             height: 80vh; /* Ajusta a altura da galeria */
-            overflow: hidden; /* Esconde partes da imagem que saem da área da galeria */
             display: flex;
             justify-content: center;
             align-items: center;
+            overflow: hidden; /* Evita que a imagem exceda a galeria */
         }
         img {
-            position: absolute;
             max-width: 100%;
             max-height: 100%;
+            display: none; /* Oculta todas as imagens inicialmente */
             transition: opacity 1s ease-in-out; /* Transição suave */
-            opacity: 0; /* Começa invisível */
         }
         img.active {
-            opacity: 1; /* Imagem ativa é visível */
+            display: block; /* Apenas a imagem ativa é exibida */
         }
         .contador {
             font-size: 20px;
@@ -74,9 +72,6 @@
         let indiceAtual = 0;
         let segundosRestantes = 15;
 
-        // Array para armazenar as imagens pré-carregadas
-        const imagensPrecarregadas = [];
-
         function carregarImagens() {
             return new Promise((resolve, reject) => {
                 let imagensCarregadas = 0;
@@ -85,7 +80,10 @@
                     const img = new Image();
                     img.src = src;
                     img.onload = () => {
-                        imagensPrecarregadas.push(img);
+                        const imgElement = document.createElement('img');
+                        imgElement.src = img.src; // Define a fonte da imagem
+                        imgElement.className = (imagensCarregadas === 0) ? 'active' : ''; // Define a primeira imagem como ativa
+                        galleryElemento.appendChild(imgElement); // Adiciona a imagem à galeria
                         imagensCarregadas++;
                         if (imagensCarregadas === imagens.length) {
                             resolve(); // Todas as imagens foram carregadas
@@ -98,10 +96,13 @@
             });
         }
 
-        function exibirImagens() {
-            imagensPrecarregadas.forEach((img, index) => {
-                img.className = 'active'; // Define todas as imagens como ativas
-                galleryElemento.appendChild(img); // Adiciona as imagens à galeria
+        function atualizarImagem() {
+            const todasImagens = galleryElemento.getElementsByTagName('img');
+            Array.from(todasImagens).forEach((img, index) => {
+                img.classList.remove('active'); // Remove a classe 'active' de todas
+                if (index === indiceAtual) {
+                    img.classList.add('active'); // Adiciona a classe 'active' apenas à imagem atual
+                }
             });
             contadorElemento.textContent = segundosRestantes; // Exibe o tempo restante
         }
@@ -109,7 +110,7 @@
         function iniciarGaleria() {
             carregarImagens()
                 .then(() => {
-                    exibirImagens(); // Exibe todas as imagens
+                    atualizarImagem(); // Exibe a primeira imagem
 
                     const intervalo = setInterval(() => {
                         segundosRestantes--;
@@ -117,6 +118,7 @@
                         if (segundosRestantes <= 0) {
                             indiceAtual = (indiceAtual + 1) % imagens.length; // Avança o índice
                             segundosRestantes = 15; // Reinicia o contador
+                            atualizarImagem(); // Atualiza a imagem
                         }
 
                         contadorElemento.textContent = segundosRestantes; // Atualiza o contador
