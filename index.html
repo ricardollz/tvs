@@ -16,16 +16,18 @@
             overflow: hidden; /* Evita barras de rolagem */
         }
         .gallery {
-            width: 80vw; /* Ajusta a largura da galeria */
-            height: 80vh; /* Ajusta a altura da galeria */
+            width: 100vw; /* Largura total da tela */
+            height: 100vh; /* Altura total da tela */
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden; /* Evita que a imagem exceda a galeria */
+            overflow: hidden; /* Esconde partes da imagem que saem da área da galeria */
+            position: relative; /* Necessário para o posicionamento das imagens */
         }
         img {
-            max-width: 100%;
-            max-height: 100%;
+            width: 100%; /* Preenche a largura da tela */
+            height: 100%; /* Preenche a altura da tela */
+            object-fit: cover; /* Mantém a proporção da imagem e cobre toda a área */
             display: none; /* Oculta todas as imagens inicialmente */
             transition: opacity 1s ease-in-out; /* Transição suave */
         }
@@ -140,3 +142,4 @@
     </script>
 </body>
 </html>
+
