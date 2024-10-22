@@ -66,9 +66,9 @@
             "daniale.jpg",
             "felipe.jpg",
             "kelly.jpg",
-            "priscila.jpg",
-            "raissa.jpg",
-            "thiago.jpg",
+            "priscila.jpg", // Verifique se este nome está correto
+            "raissa.jpg",   // Verifique se este nome está correto
+            "thiago.jpg",   // Verifique se este nome está correto
             "valeria.jpg",
             "caioariane.jpg"
         ];
@@ -80,8 +80,13 @@
         imagens.forEach((src, index) => {
             const img = document.createElement('img');
             img.src = src;
-            img.className = index === 0 ? 'active' : ''; // Define a primeira imagem como ativa
-            galleryElemento.appendChild(img);
+            img.onload = () => {
+                img.className = index === 0 ? 'active' : ''; // Define a primeira imagem como ativa
+                galleryElemento.appendChild(img);
+            };
+            img.onerror = () => {
+                console.error(`Erro ao carregar a imagem: ${src}`);
+            };
         });
 
         function atualizarImagem() {
