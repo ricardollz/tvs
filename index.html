@@ -16,10 +16,13 @@
             overflow: hidden; /* Evita barras de rolagem */
         }
         .gallery {
-            position: relative; /* Para posicionar as imagens sobrepostas */
+            position: relative;
             width: 80vw; /* Ajusta a largura da galeria */
             height: 80vh; /* Ajusta a altura da galeria */
             overflow: hidden; /* Esconde partes da imagem que saem da área da galeria */
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         img {
             position: absolute;
@@ -43,13 +46,13 @@
     </style>
 </head>
 <body>
-    <div class="gallery">
-        <img id="imagem" src="" alt="Imagem" class="active">
+    <div class="gallery" id="gallery">
+        <!-- Imagens são adicionadas aqui pelo JavaScript -->
     </div>
     <p class="contador" id="tempo-restante"></p>
 
     <script>
-        const imagemElemento = document.getElementById('imagem');
+        const galleryElemento = document.getElementById('gallery');
         const contadorElemento = document.getElementById('tempo-restante');
 
         const imagens = [
@@ -64,22 +67,31 @@
             "daniale.jpg",
             "felipe.jpg",
             "kelly.jpg",
-            "priscila.jpg",
-            "raissa.jpg",
-            "thiago.jpg",
+            "Priscila.jpg",
+            "Raissa.jpg",
+            "Thiago.jpg",
             "valeria.jpg"
         ];
 
         let indiceAtual = 0;
         let segundosRestantes = 15;
 
+        // Cria elementos de imagem e adiciona à galeria
+        imagens.forEach((src, index) => {
+            const img = document.createElement('img');
+            img.src = src;
+            img.className = index === 0 ? 'active' : ''; // Define a primeira imagem como ativa
+            galleryElemento.appendChild(img);
+        });
+
         function atualizarImagem() {
-            const novasImagens = imagens.map((src) => {
-                const img = new Image();
-                img.src = src;
-                return img;
+            const todasImagens = galleryElemento.getElementsByTagName('img');
+            Array.from(todasImagens).forEach((img, index) => {
+                img.classList.remove('active'); // Remove a classe 'active' de todas
+                if (index === indiceAtual) {
+                    img.classList.add('active'); // Adiciona a classe 'active' apenas à imagem atual
+                }
             });
-            imagemElemento.src = novasImagens[indiceAtual].src;
             contadorElemento.textContent = segundosRestantes; // Exibe o tempo restante
         }
 
@@ -90,15 +102,9 @@
                 segundosRestantes--;
 
                 if (segundosRestantes <= 0) {
-                    // Adiciona classe para transição
-                    imagemElemento.classList.remove('active');
                     indiceAtual = (indiceAtual + 1) % imagens.length; // Avança o índice
                     segundosRestantes = 15; // Reinicia o contador
-
-                    setTimeout(() => {
-                        atualizarImagem(); 
-                        imagemElemento.classList.add('active');
-                    }, 1000); // Espera a transição acabar para atualizar a imagem
+                    atualizarImagem(); // Atualiza a imagem
                 }
 
                 contadorElemento.textContent = segundosRestantes; // Atualiza o contador
@@ -116,4 +122,3 @@
     </script>
 </body>
 </html>
-
