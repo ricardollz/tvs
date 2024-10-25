@@ -69,9 +69,9 @@
             "thiago.jpg",
             "valeria.jpg",
             "caioariane.jpg",
+            "llz.jpg", // Adicionando a nova imagem
             "halloween.mp4", // Adicionando o primeiro vídeo
             "fotos.mp4" // Adicionando o segundo vídeo
-             "llz.jpg", // Adicionando a nova imagem
         ];
 
         let indiceAtual = 0;
@@ -89,30 +89,31 @@
                         itemElement = document.createElement('img');
                         itemElement.src = src;
                         itemElement.className = 'gallery-item';
+                        itemElement.onload = () => {
+                            itensCarregados++;
+                            if (itensCarregados === itens.length) {
+                                resolve();
+                            }
+                        };
                     } else if (ext === 'mp4') {
                         itemElement = document.createElement('video');
                         itemElement.src = src;
                         itemElement.className = 'gallery-item';
                         itemElement.muted = true; // Mute o vídeo por padrão
                         itemElement.loop = true; // Loop do vídeo
-                        itemElement.play(); // Inicia o vídeo
+                        itemElement.onloadeddata = () => {
+                            itensCarregados++;
+                            if (itensCarregados === itens.length) {
+                                resolve();
+                            }
+                        };
                     }
 
-                    if (itensCarregados === 0) {
-                        itemElement.classList.add('active'); // Define o primeiro item como ativo
-                    }
-
-                    galleryElemento.appendChild(itemElement); // Adiciona o item à galeria
-                    itensCarregados++;
-
-                    itemElement.onload = itemElement.onloadeddata = () => {
-                        if (itensCarregados === itens.length) {
-                            resolve(); // Todos os itens foram carregados
-                        }
-                    };
                     itemElement.onerror = () => {
                         reject(`Erro ao carregar o item: ${src}`);
                     };
+
+                    galleryElemento.appendChild(itemElement); // Adiciona o item à galeria
                 });
             });
         }
@@ -166,5 +167,3 @@
     </script>
 </body>
 </html>
-
-
