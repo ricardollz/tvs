@@ -63,9 +63,9 @@
             "campanha2.jpg",
             "elogio1.jpg",
             "elogio2.jpg",
-            "capa.jpg";
+            "capa.jpg",
             "celulajoven.jpg",
-            "celulajuniorjpg",
+            "celulajunior.jpg",
             "colchão.jpg",
             "criticos.jpg",
             "fase1.jpg",
@@ -81,7 +81,6 @@
         let indiceAtual = 0;
         let segundosRestantes = 15;
 
-        // Garante que as imagens sejam adicionadas à galeria na ordem correta
         function carregarImagens() {
             return new Promise((resolve) => {
                 imagens.forEach((src, index) => {
@@ -123,11 +122,10 @@
                     contadorElemento.textContent = `${segundosRestantes} segundos`;
                 }, 1000);
 
-                // Recarrega a página após 7 minutos
                 setTimeout(() => {
                     clearInterval(intervalo);
                     location.reload();
-                }, 420000);
+                }, 420000); // 7 minutos
             });
         }
 
@@ -135,3 +133,4 @@
     </script>
 </body>
 </html>
+
