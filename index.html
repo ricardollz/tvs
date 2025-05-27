@@ -82,7 +82,6 @@
         let indiceAtual = 0;
         let segundosRestantes = 15;
 
-        // Função para obter a hora atual de Brasília
         function obterHoraBrasilia() {
             const options = { timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit', second: '2-digit' };
             const formatter = new Intl.DateTimeFormat('pt-BR', options);
@@ -90,12 +89,14 @@
             return formatter.format(horarioBrasilia);
         }
 
-        // Função para carregar as imagens
         function carregarImagens() {
             return new Promise((resolve) => {
                 imagens.forEach((src, index) => {
                     const imgElement = document.createElement('img');
-                    imgElement.src = src;
+
+                    // Adiciona cache busting: força o navegador a carregar a imagem do zero
+                    imgElement.src = src + '?v=' + Date.now();
+
                     if (index === 0) {
                         imgElement.classList.add('active');
                     }
@@ -105,7 +106,6 @@
             });
         }
 
-        // Função para atualizar a imagem e o contador
         function atualizarImagem() {
             const todasImagens = galleryElemento.getElementsByTagName('img');
             Array.from(todasImagens).forEach((img, index) => {
@@ -117,7 +117,6 @@
             contadorElemento.textContent = `${segundosRestantes} segundos`;
         }
 
-        // Função para iniciar a galeria
         function iniciarGaleria() {
             carregarImagens().then(() => {
                 atualizarImagem();
@@ -126,7 +125,6 @@
                     segundosRestantes--;
 
                     if (segundosRestantes <= 0) {
-                        // Quando o contador chegar a 0, muda para a próxima imagem e reinicia o tempo
                         indiceAtual = (indiceAtual + 1) % imagens.length;
                         segundosRestantes = 15;
                         atualizarImagem();
@@ -135,12 +133,10 @@
                     contadorElemento.textContent = `${segundosRestantes} segundos`;
                 }, 1000);
 
-                // Reiniciar a galeria a cada 14 minutos com base no horário de Brasília
                 setInterval(() => {
                     const horaBrasilia = obterHoraBrasilia();
                     const [hora, minuto, segundo] = horaBrasilia.split(':').map(Number);
-                    
-                    // Checa se passou 14 minutos após o último reinício
+
                     if (minuto % 14 === 0 && segundo === 0) {
                         indiceAtual = 0;
                         segundosRestantes = 15;
@@ -150,10 +146,7 @@
             });
         }
 
-        // Inicia a galeria
         iniciarGaleria();
     </script>
 </body>
 </html>
-
-
