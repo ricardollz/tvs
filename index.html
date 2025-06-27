@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Galeria de Imagens</title>
     <style>
         body {
@@ -42,6 +42,7 @@
             top: 10px;
             right: 10px;
             color: black;
+            user-select: none;
         }
     </style>
 </head>
@@ -53,23 +54,24 @@
         const galleryElemento = document.getElementById('gallery');
         const contadorElemento = document.getElementById('tempo-restante');
 
+        // Lista de imagens com nomes sem acento e minúsculos para evitar problemas
         const imagens = [
             "codigo.jpg",
             "canaldedenuncias.jpg",
             "elogio2.jpg",
             "elogio1.jpg",
             "elogio3.jpg",
-            "Capa.jpg",
+            "capa.jpg",
             "bot.jpg",
             "celulababy.jpg",
             "celulajovem.jpg",
             "celulajunior.jpg",
-            "colchão.jpg",
-            "continadimplencia.jpg",
+            "colchao.jpg",               // sem acento
+            "continuaadimplencia.jpg",  // nome ajustado
             "criticos.jpg",
             "financeira.jpg",
-            "Ncancelados.jpg",
-            "Ncancelados2.jpg",
+            "ncancelados.jpg",
+            "ncancelados2.jpg",
             "parceiras.jpg",
             "receptivo.jpg",
             "ticketalto.jpg",
@@ -86,23 +88,27 @@
             return formatter.format(horarioBrasilia);
         }
 
+        // Carrega as imagens no container, com cache busting para garantir atualização
         function carregarImagens() {
             return new Promise((resolve) => {
                 imagens.forEach((src, index) => {
                     const imgElement = document.createElement('img');
-
-                    // Adiciona cache busting: força o navegador a carregar a imagem do zero
                     imgElement.src = src + '?v=' + Date.now();
 
                     if (index === 0) {
                         imgElement.classList.add('active');
                     }
                     galleryElemento.appendChild(imgElement);
+
+                    // Log para cada imagem carregada
+                    imgElement.onload = () => console.log(`Imagem carregada: ${src}`);
+                    imgElement.onerror = () => console.error(`Erro ao carregar imagem: ${src}`);
                 });
                 resolve();
             });
         }
 
+        // Atualiza a imagem visível e o contador de segundos
         function atualizarImagem() {
             const todasImagens = galleryElemento.getElementsByTagName('img');
             Array.from(todasImagens).forEach((img, index) => {
@@ -114,22 +120,27 @@
             contadorElemento.textContent = `${segundosRestantes} segundos`;
         }
 
+        // Função principal que inicia a galeria
         function iniciarGaleria() {
+            console.log("Iniciando galeria com " + imagens.length + " imagens.");
+
             carregarImagens().then(() => {
                 atualizarImagem();
 
-                const intervalo = setInterval(() => {
+                // Intervalo para atualizar contador e trocar imagem a cada 15 segundos
+                setInterval(() => {
                     segundosRestantes--;
 
                     if (segundosRestantes <= 0) {
                         indiceAtual = (indiceAtual + 1) % imagens.length;
                         segundosRestantes = 15;
                         atualizarImagem();
+                    } else {
+                        contadorElemento.textContent = `${segundosRestantes} segundos`;
                     }
-
-                    contadorElemento.textContent = `${segundosRestantes} segundos`;
                 }, 1000);
 
+                // Intervalo para reiniciar galeria a cada 14 minutos em ponto (minuto % 14 === 0 e segundo === 0)
                 setInterval(() => {
                     const horaBrasilia = obterHoraBrasilia();
                     const [hora, minuto, segundo] = horaBrasilia.split(':').map(Number);
@@ -138,6 +149,7 @@
                         indiceAtual = 0;
                         segundosRestantes = 15;
                         atualizarImagem();
+                        console.log('Galeria reiniciada automaticamente no minuto múltiplo de 14');
                     }
                 }, 1000);
             });
